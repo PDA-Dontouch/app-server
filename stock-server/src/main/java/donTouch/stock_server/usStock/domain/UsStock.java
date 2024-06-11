@@ -1,4 +1,4 @@
-package donTouch.stock_server.krStock.domain;
+package donTouch.stock_server.usStock.domain;
 
 import donTouch.stock_server.stock.domain.Stock;
 import jakarta.persistence.Column;
@@ -11,10 +11,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "kr_stocks")
-public class KrStock extends Stock {
-    String corpCode;
-
+@Table(name = "us_stocks")
+public class UsStock extends Stock {
     @Id
     @Column(name = "id")
     int id;
@@ -27,13 +25,12 @@ public class KrStock extends Stock {
 //    double growthScore;
 //    double dividendScore;
 //    short dividendMonth;
-//
 //    double dividendRate;
 //    String type;
 //    String exchange;
 //    short dividendCount;
 //
-//    @Column(name = "dividend_yield_TTM")
+//    @Column(name = "dividend_yield_TTM", columnDefinition = "TIMESTAMP")
 //    double dividendYieldTTM;
 //
 //    @Column(name = "updated_date", columnDefinition = "TIMESTAMP")

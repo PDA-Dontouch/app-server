@@ -1,21 +1,23 @@
-package donTouch.stock_server.krStock.domain;
+package donTouch.stock_server.usStock.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "kr_stock_details")
-public class KrStockDetail {
+@Table(name = "us_stock_details")
+public class UsStockDetail {
     @Id
     @Column(name = "id")
     int id;
-    @Column(name="kr_stock_id")
-    int KrStockId;
+    @Column(name="us_stock_id")
+    int UsStockId;
     String symbol;
 
     long marketCap;
