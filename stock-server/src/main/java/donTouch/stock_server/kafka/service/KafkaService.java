@@ -24,9 +24,11 @@ public class KafkaService {
         log.info("이게 가져온 데이터 : " + data.toString());
     }
 
-    @KafkaListener(topics = "find_stocks", groupId = "stock_group")
+    @KafkaListener(topics = "find_stocks_request", groupId = "stock_group")
     public void findStocks(FindStocksReq findStocksReq) {
         log.info(findStocksReq.getToken());
         List<StockRes> stockList = stockService.findStocks(findStocksReq);
+
+        kafkaTemplate.send("find_stocks_response", "user_group", stockList);
     }
 }

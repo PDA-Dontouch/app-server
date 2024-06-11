@@ -51,7 +51,8 @@ public class KafkaConfig {
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG
                 , JsonSerializer.class);
         props.put(JsonSerializer.TYPE_MAPPINGS,
-                "UsersDto:donTouch.stock_server.kafka.dto.UsersDto");
+                "UsersDto:donTouch.stock_server.kafka.dto.UsersDto,"
+                        + "StockRes:donTouch.stock_server.stock.dto.StockResDto");
         return props;
     }
 

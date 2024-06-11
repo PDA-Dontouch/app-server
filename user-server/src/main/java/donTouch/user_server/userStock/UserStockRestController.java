@@ -24,4 +24,11 @@ public class UserStockRestController {
             return ApiUtils.error("fail to send kafka message", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    public ApiUtils.ApiResult<Object> sendResponse(Object response) {
+        if (response == null) {
+            return ApiUtils.error("server error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return ApiUtils.success(response);
+    }
 }
