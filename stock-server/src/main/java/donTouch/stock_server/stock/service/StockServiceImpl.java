@@ -1,6 +1,5 @@
 package donTouch.stock_server.stock.service;
 
-
 import donTouch.stock_server.krStock.domain.KrStock;
 import donTouch.stock_server.krStock.domain.KrStockJpaRepository;
 import donTouch.stock_server.stock.domain.Stock;
@@ -14,8 +13,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-@AllArgsConstructor
 @Service
+@AllArgsConstructor
 public class StockServiceImpl implements StockService {
     private KrStockJpaRepository krStockJpaRepository;
     private UsStockJpaRepository usStockJpaRepository;
