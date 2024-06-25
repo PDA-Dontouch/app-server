@@ -66,7 +66,7 @@ public class StockRestController {
             }
             return ApiUtils.success(combination);
         } catch (NullPointerException e) {
-            return ApiUtils.error("price not found", HttpStatus.NOT_FOUND);
+            return ApiUtils.error("user not found", HttpStatus.NOT_FOUND);
         }
 
     }

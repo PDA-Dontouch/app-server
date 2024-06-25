@@ -15,6 +15,8 @@ import donTouch.energy_server.utils.EnergyFundMapper;
 import donTouch.utils.utils.ApiUtils;
 import donTouch.utils.utils.Sort;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -26,6 +28,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
+@PropertySource(value = {"application.properties"})
 public class EnergyFundServiceImplement implements EnergyFundService {
 
     private final EnergyFundJpaRepository energyRepository;
@@ -33,6 +36,11 @@ public class EnergyFundServiceImplement implements EnergyFundService {
     private final EnergyFundMapper energyMapper = EnergyFundMapper.INSTANCE;
     private final RestTemplate restTemplate = new RestTemplate();
     private final KafkaProducerService kafkaProducerService;
+
+    @Value("${USER_URL}")
+    private static String USER_URL;
+    @Value("${HOLDING_URL}")
+    private static String HOLDING_URL;
 
     @Override
     public List<EnergyFundDto> getAllEnergyFund() {
@@ -69,7 +77,7 @@ public class EnergyFundServiceImplement implements EnergyFundService {
         }
 
         BankCalculateForm requestBody = new BankCalculateForm(buyEnergyFundForm.getUserId(), (long) inputCash * -1);
-        ApiUtils.ApiResult result = restTemplate.postForEntity("http://localhost:8081/api/user/bank/cal", requestBody, ApiUtils.ApiResult.class).getBody();
+        ApiUtils.ApiResult result = restTemplate.postForEntity(USER_URL + "/api/user/bank/cal", requestBody, ApiUtils.ApiResult.class).getBody();
         System.out.println("result ======================== :" + result.getResponse());
         if (result.getResponse().equals("잔고가 부족합니다.")) {
             throw new NullPointerException("잔고가 부족합니다.");
@@ -123,7 +131,7 @@ public class EnergyFundServiceImplement implements EnergyFundService {
         HttpEntity<HoldingEnergyFundForm> requestEntity = new HttpEntity<>(requestBody, headers);
 
         ResponseEntity<HoldingEnergyFundDto> responseEntity = restTemplate.postForEntity(
-                "http://localhost:8085/api/holding/energy/sell",
+                HOLDING_URL + "/api/holding/energy/sell",
                 requestEntity,
                 HoldingEnergyFundDto.class
         );
@@ -132,7 +140,7 @@ public class EnergyFundServiceImplement implements EnergyFundService {
             HoldingEnergyFundDto responseBody = responseEntity.getBody();
 
             BankCalculateForm requestBodyBank = new BankCalculateForm(responseBody.getUserId(), (long) responseBody.getInputCash());
-            ApiUtils.ApiResult result = restTemplate.postForEntity("http://localhost:8081/api/user/bank/cal", requestBodyBank, ApiUtils.ApiResult.class).getBody();
+            ApiUtils.ApiResult result = restTemplate.postForEntity(USER_URL + "/api/user/bank/cal", requestBodyBank, ApiUtils.ApiResult.class).getBody();
             if (result.getResponse().equals("잔고가 부족합니다.")) {
                 throw new NullPointerException("입금이 되지 않았습니다.");
             }
