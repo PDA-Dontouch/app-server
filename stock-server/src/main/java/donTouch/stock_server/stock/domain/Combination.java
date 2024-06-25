@@ -35,6 +35,6 @@ public class Combination {
     }
 
     public CombinationDTO convertToDTO() {
-        return new CombinationDTO(stockDTO.getId(), stockDTO.getName(), stockDTO.getSymbol(), stockDTO.getExchange(), stockDTO.getClosePrice(), quantity, getTotalDividendPerQuarter());
+        return new CombinationDTO(stockDTO.getId(), stockDTO.getName(), stockDTO.getSymbol(), stockDTO.getExchange(), stockDTO.getDividendYieldTtm(), stockDTO.getClosePrice(), quantity, getTotalDividendPerQuarter());
     }
 }

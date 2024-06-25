@@ -11,6 +11,7 @@ public class CombinationDTO {
     String name;
     String symbol;
     String exchange;
+    Double dividendYieldTtm;
 
     Integer price;
     Integer quantity;

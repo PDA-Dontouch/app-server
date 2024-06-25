@@ -2,6 +2,7 @@ package donTouch.user_server.user.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import donTouch.user_server.oauth.dto.UserForTokenFormer;
 import lombok.*;
 
 @Builder
@@ -11,6 +12,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginDto {
-    UsersDto user;
+    UserForTokenFormer user;
     String token;
 }

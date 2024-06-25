@@ -7,6 +7,7 @@ import donTouch.user_server.oauth.domain.OauthMember;
 import donTouch.user_server.oauth.domain.OauthMemberRepository;
 import donTouch.user_server.oauth.domain.OauthServerType;
 import donTouch.user_server.oauth.dto.LoginResponse;
+import donTouch.user_server.oauth.dto.UserForTokenFormer;
 import donTouch.user_server.user.domain.JpaUserRepository;
 import donTouch.user_server.user.domain.Users;
 import donTouch.user_server.user.dto.LoginDto;
@@ -46,7 +47,7 @@ public class OauthServiceImpl implements OauthService, UserDetailsService {
     public LoginDto login(OauthServerType oauthServerType, String authCode) {
         OauthMember oauthMember = oauthMemberClientComposite.fetch(oauthServerType, authCode);
         Users isExist = jpaUserRepository.findByEmail(oauthMember.email())
-                .orElseGet(()->{
+                .orElseGet(() -> {
                     Users newUser = Users.builder()
                             .email(oauthMember.email())
                             .nickname(oauthMember.nickname())
@@ -61,16 +62,30 @@ public class OauthServiceImpl implements OauthService, UserDetailsService {
                     return newUser;
                 });
 
-        UsersDto loginedUser = usersMapper.toDto(isExist);
-        log.info(loginedUser.toString());
-        //String token = jwtTokenProvider.createToken(isExist);
-        String token = "test";
-        return new LoginDto(loginedUser,token);
+        UserForTokenFormer userForToken = new UserForTokenFormer(
+                isExist.getId(),
+                isExist.getEmail(),
+                isExist.getSnsType(),
+                isExist.getNickname(),
+                isExist.getInvestmentType(),
+                isExist.getSafeScore(),
+                isExist.getDividendScore(),
+                isExist.getGrowthScore()
+        );
+
+        String token = jwtTokenProvider.createToken(userForToken);
+        return new LoginDto(userForToken,token);
     }
 
     @Override
-    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        Optional<Users> user = jpaUserRepository.findById(Long.valueOf(userId));
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<Users> user = jpaUserRepository.findByEmail(email);
         return (UserDetails) user.orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+    }
+
+    public String makeToken(UserForTokenFormer inputUser){
+        String token = jwtTokenProvider.createToken(inputUser);
+        //String token = "test";
+        return token;
     }
 }

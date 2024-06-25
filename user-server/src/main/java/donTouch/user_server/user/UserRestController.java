@@ -3,6 +3,7 @@ package donTouch.user_server.user;
 import donTouch.user_server.kafka.service.KafkaService;
 import donTouch.user_server.oauth.domain.OauthServerType;
 import donTouch.user_server.oauth.dto.LoginResponse;
+import donTouch.user_server.oauth.dto.UserForTokenFormer;
 import donTouch.user_server.oauth.service.OauthService;
 import donTouch.user_server.user.dto.*;
 import donTouch.user_server.user.service.BankAccountService;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
 @RestController
-@CrossOrigin(origins = {"http://localhost:5174", "http://localhost:5173"})
 @Slf4j
 public class UserRestController {
     private final OauthService oauthService;
@@ -33,11 +33,12 @@ public class UserRestController {
     }
 
     @GetMapping("/api/user/{email}")
-    public UsersDto getUser(@PathVariable String email) {
+    public ApiResult<UsersDto> getUser(@PathVariable String email) {
         try {
-            return userService.findUserByEmail(email);
+            UsersDto user = userService.findUserByEmail(email);
+            return ApiUtils.success(user);
         } catch (NullPointerException e) {
-            return null;
+            return ApiUtils.error(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -128,12 +129,12 @@ public class UserRestController {
     }
 
     @GetMapping("/api/user/token")
-    public ApiResult<UsersDto> makeMyToken(
-            @RequestBody @Valid InvestmentTypeForm investmentTypeForm
+    public ApiResult<String> makeMyToken(
+            @RequestBody @Valid UserForTokenFormer inputUser
     ){
         try{
-            UsersDto result = userService.updateInvestmentType(investmentTypeForm);
-            return ApiUtils.success(result);
+            String newToken = oauthService.makeToken(inputUser);
+            return ApiUtils.success(newToken);
         }catch(NullPointerException e){
             return ApiUtils.error(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

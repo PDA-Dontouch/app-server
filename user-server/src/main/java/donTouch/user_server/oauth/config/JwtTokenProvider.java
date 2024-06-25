@@ -1,5 +1,6 @@
 package donTouch.user_server.oauth.config;
 
+import donTouch.user_server.oauth.dto.UserForTokenFormer;
 import donTouch.user_server.user.domain.Users;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -21,7 +22,7 @@ import java.security.Key;
 import java.util.Date;
 
 @Slf4j
-@PropertySource(value = {"env.properties"})
+@PropertySource(value = {"application.properties"})
 @Component
 public class JwtTokenProvider {
 
@@ -29,7 +30,7 @@ public class JwtTokenProvider {
     @Value("${LOGIN_JWT_SECRET_KEY}")
     private String LOGIN_JWT_SECRET_KEY;
     private Key key;
-    private long tokenValidTime = 5 * 60 * 1000L; // 5min
+    private long tokenValidTime = 30 * 60 * 1000L; // 30min
 
     private UserDetailsService userDetailsService;
 
@@ -42,8 +43,8 @@ public class JwtTokenProvider {
     }
 
     // 토큰 생성
-    public String createToken(Users user) {
-        Claims claims = Jwts.claims().setSubject(user.getId().toString());
+    public String createToken(UserForTokenFormer user) {
+        Claims claims = Jwts.claims();
         Date now = new Date();
         log.info("createToken - userNickname : " + user.getNickname());
 
@@ -74,16 +75,17 @@ public class JwtTokenProvider {
 
     // 내가 만든 토큰인지 & username 기반으로 DB 에서 객체 가져오기
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(getUsername(token));
+        UserDetails userDetails = userDetailsService.loadUserByUsername(getUserEmail(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "",
                 userDetails.getAuthorities());
     }
 
 
     // 토큰에서 username 가져오기
-    public String getUsername(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build()
-                .parseClaimsJws(token).getBody().getSubject();
+    public String getUserEmail(String token) {
+        Claims claims = Jwts.parserBuilder().setSigningKey(key).build()
+                .parseClaimsJws(token).getBody();
+        return claims.get("email", String.class);
     }
 }
 
