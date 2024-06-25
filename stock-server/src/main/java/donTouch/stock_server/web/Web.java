@@ -5,6 +5,8 @@ import donTouch.stock_server.web.dto.PurchaseInfoDTO;
 import donTouch.stock_server.web.dto.PurchasedStockDTO;
 import donTouch.stock_server.web.dto.ScoreDto;
 import donTouch.utils.utils.ApiUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -12,12 +14,18 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.List;
 import java.util.Map;
 
+@PropertySource(value = {"application.properties"})
 public class Web {
+    @Value("${USER_URL}")
+    private static String USER_URL;
+    @Value("${HOLDING_URL}")
+    private static String HOLDING_URL;
+
     public static List<LikeStockDTO> getLikeStockDTOList(Long userId) {
         try {
             WebClient webClient = WebClient.create();
 
-            String getLikeStockIdsUrl = "http://localhost:8081/api/user/like/stocks?userId=";
+            String getLikeStockIdsUrl = USER_URL + "/api/user/like/stocks?userId=";
             ResponseEntity<ApiUtils.ApiResult<List<LikeStockDTO>>> responseEntity = webClient.get()
                     .uri(getLikeStockIdsUrl + userId)
                     .retrieve()
@@ -35,7 +43,7 @@ public class Web {
         try {
             WebClient webClient = WebClient.create();
 
-            String getCombinationPurchasedUrl = "http://localhost:8085/api/holding/combination?userId=" + userId;
+            String getCombinationPurchasedUrl = HOLDING_URL + "/api/holding/combination?userId=" + userId;
 
             ResponseEntity<ApiUtils.ApiResult<List<PurchasedStockDTO>>> responseEntity = webClient.get()
                     .uri(getCombinationPurchasedUrl)
@@ -54,7 +62,7 @@ public class Web {
         try {
             WebClient webClient = WebClient.create();
 
-            String getLikeStockIdsUrl = "http://localhost:8085/api/holding/stocks?&userId=" + userId + "&getPrice=true";
+            String getLikeStockIdsUrl = HOLDING_URL + "/api/holding/stocks?&userId=" + userId + "&getPrice=true";
 
             ResponseEntity<ApiUtils.ApiResult<Map<String, List<PurchaseInfoDTO>>>> responseEntity = webClient.get()
                     .uri(getLikeStockIdsUrl)
@@ -73,7 +81,7 @@ public class Web {
         try {
             WebClient webClient = WebClient.create();
 
-            String getLikeStockIdsUrl = "http://localhost:8081/api/user/score?userId=" + userId;
+            String getLikeStockIdsUrl = USER_URL + "/api/user/score?userId=" + userId;
 
             ResponseEntity<ApiUtils.ApiResult<ScoreDto>> responseEntity = webClient.get()
                     .uri(getLikeStockIdsUrl)
