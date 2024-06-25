@@ -6,17 +6,13 @@ import donTouch.user_server.oauth.domain.AuthCodeRequestUrlProviderComposite;
 import donTouch.user_server.oauth.domain.OauthMember;
 import donTouch.user_server.oauth.domain.OauthMemberRepository;
 import donTouch.user_server.oauth.domain.OauthServerType;
-import donTouch.user_server.oauth.dto.LoginResponse;
 import donTouch.user_server.oauth.dto.UserForTokenFormer;
 import donTouch.user_server.user.domain.JpaUserRepository;
 import donTouch.user_server.user.domain.Users;
 import donTouch.user_server.user.dto.LoginDto;
-import donTouch.user_server.user.dto.UsersDto;
 import donTouch.user_server.user.utils.UsersMapper;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -33,10 +29,9 @@ public class OauthServiceImpl implements OauthService, UserDetailsService {
     private final OauthMemberClientComposite oauthMemberClientComposite;
     private final OauthMemberRepository oauthMemberRepository;
     private final JpaUserRepository jpaUserRepository;
-    @Lazy
+    // @Lazy
     private final JwtTokenProvider jwtTokenProvider;
     private final UsersMapper usersMapper = UsersMapper.INSTANCE;
-
 
     @Override
     public String getAuthCodeRequestUrl(OauthServerType oauthServerType) {
@@ -74,7 +69,7 @@ public class OauthServiceImpl implements OauthService, UserDetailsService {
         );
 
         String token = jwtTokenProvider.createToken(userForToken);
-        return new LoginDto(userForToken,token);
+        return new LoginDto(userForToken, token);
     }
 
     @Override
@@ -83,7 +78,7 @@ public class OauthServiceImpl implements OauthService, UserDetailsService {
         return (UserDetails) user.orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
     }
 
-    public String makeToken(UserForTokenFormer inputUser){
+    public String makeToken(UserForTokenFormer inputUser) {
         String token = jwtTokenProvider.createToken(inputUser);
         //String token = "test";
         return token;

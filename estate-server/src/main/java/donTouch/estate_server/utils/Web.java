@@ -5,20 +5,27 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 
-@PropertySource(value = {"env.properties"})
+@Component
+@PropertySource(value = {"application.properties"})
 public class Web {
+    private static String userUrl;
+    private static WebClient webClient;
+
     @Value("${USER_URL}")
-    private static String USER_URL;
+    public void setUserUrl(String userUrl) {
+        Web.userUrl = userUrl;
+    }
 
     public static List<Integer> getLikeEstateFundIds(Long userId) {
         try {
-            WebClient webClient = WebClient.create();
+            WebClient webClient = getWebClient();
 
-            String getLikeEstateFundIdsUrl = USER_URL + "/api/user/like/estate?userId=" + userId;
+            String getLikeEstateFundIdsUrl = userUrl + "/api/user/like/estate?userId=" + userId;
             ResponseEntity<ApiUtils.ApiResult<List<Integer>>> responseEntity = webClient.get()
                     .uri(getLikeEstateFundIdsUrl)
                     .retrieve()
@@ -26,9 +33,20 @@ public class Web {
                     })
                     .block();
 
-            return responseEntity.getBody().getResponse();
+            if (responseEntity != null && responseEntity.getBody() != null) {
+                return responseEntity.getBody().getResponse();
+            } else {
+                throw new IllegalStateException("Failed to retrieve data from API");
+            }
         } catch (Exception e) {
-            throw new IllegalStateException();
+            throw new IllegalStateException("Failed to fetch data from API", e);
         }
+    }
+
+    private static WebClient getWebClient() {
+        if (webClient == null) {
+            webClient = WebClient.create();
+        }
+        return webClient;
     }
 }

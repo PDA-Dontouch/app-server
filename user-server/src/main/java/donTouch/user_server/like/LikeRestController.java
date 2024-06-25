@@ -16,7 +16,6 @@ import java.util.Map;
 
 @RestController
 @AllArgsConstructor
-@CrossOrigin(origins = {"http://localhost:5174", "http://localhost:5173"})
 @RequestMapping("/api/user/like")
 public class LikeRestController {
     LikeStockService likeStockService;

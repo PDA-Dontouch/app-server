@@ -15,7 +15,6 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@CrossOrigin(origins = {"http://localhost:5174", "http://localhost:5173"})
 @RequestMapping("/api/energy")
 public class EnergyRestController {
     private EnergyFundService energyFundService;

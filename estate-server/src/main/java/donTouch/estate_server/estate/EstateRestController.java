@@ -18,7 +18,6 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@CrossOrigin(origins = {"http://localhost:5174", "http://localhost:5173"})
 public class EstateRestController {
     private final EstateFundService estateFundService;
     private final EstateFundDetailService estateFundDetailService;

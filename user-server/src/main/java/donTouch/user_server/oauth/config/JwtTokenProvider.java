@@ -1,10 +1,8 @@
 package donTouch.user_server.oauth.config;
 
 import donTouch.user_server.oauth.dto.UserForTokenFormer;
-import donTouch.user_server.user.domain.Users;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;

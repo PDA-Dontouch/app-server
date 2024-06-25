@@ -9,17 +9,27 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 import java.util.Map;
 
+@Component
 @PropertySource(value = {"application.properties"})
 public class Web {
-    @Value("${USER_URL}")
     private static String USER_URL;
-    @Value("${HOLDING_URL}")
     private static String HOLDING_URL;
+
+    @Value("${USER_URL}")
+    public void setUserUrl(String userUrl) {
+        USER_URL = userUrl;
+    }
+
+    @Value("${HOLDING_URL}")
+    public void setHoldingUrl(String holdingUrl) {
+        HOLDING_URL = holdingUrl;
+    }
 
     public static List<LikeStockDTO> getLikeStockDTOList(Long userId) {
         try {
@@ -35,7 +45,7 @@ public class Web {
 
             return responseEntity.getBody().getResponse();
         } catch (Exception e) {
-            throw new IllegalStateException();
+            throw new IllegalStateException(e.getMessage(), e);
         }
     }
 
@@ -54,7 +64,7 @@ public class Web {
 
             return responseEntity.getBody().getResponse();
         } catch (Exception e) {
-            throw new IllegalStateException();
+            throw new IllegalStateException(e.getMessage(), e);
         }
     }
 
@@ -73,7 +83,7 @@ public class Web {
 
             return responseEntity.getBody().getResponse();
         } catch (Exception e) {
-            throw new IllegalStateException();
+            throw new IllegalStateException(e.getMessage(), e);
         }
     }
 
@@ -92,7 +102,7 @@ public class Web {
 
             return responseEntity.getBody().getResponse();
         } catch (Exception e) {
-            throw new IllegalStateException();
+            throw new IllegalStateException(e.getMessage(), e);
         }
     }
 }

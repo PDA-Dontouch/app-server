@@ -9,14 +9,16 @@ import donTouch.utils.utils.ApiUtils;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @AllArgsConstructor
-@CrossOrigin(origins = {"http://localhost:5174", "http://localhost:5173"})
 @RequestMapping("/api/stocks/calendar")
 public class DividendRestController {
     private final DividendService dividendService;
@@ -24,7 +26,7 @@ public class DividendRestController {
     @PostMapping("")
     public ApiUtils.ApiResult<List<DividendDTO>> findCalendar(@RequestBody @Valid DividendForm dividendForm) {
         Map<String, List<PurchaseInfoDTO>> holdingPurchases = Web.getHoldingStockPurchaseInfos(dividendForm.getUserId());
-        
+
         List<DividendDTO> result = dividendService.findCalendar(dividendForm, holdingPurchases);
 
         if (result == null) {

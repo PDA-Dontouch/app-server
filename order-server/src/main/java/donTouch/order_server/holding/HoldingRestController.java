@@ -23,7 +23,6 @@ import java.util.Map;
 @Slf4j
 @AllArgsConstructor
 @RestController
-@CrossOrigin(origins = {"http://localhost:5174", "http://localhost:5173"})
 public class HoldingRestController {
     private final HoldingEstateFundService holdingEstateFundService;
     private final HoldingKrStockService holdingKrStockService;

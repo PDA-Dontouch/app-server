@@ -6,4 +6,6 @@ import java.util.Optional;
 
 public interface KrStockDetailJpaRepository extends JpaRepository<KrStockDetail, Integer> {
     Optional<KrStockDetail> findByKrStockId(Integer krStockId);
+
+    Optional<KrStockDetail> findBySymbol(String symbol);
 }
