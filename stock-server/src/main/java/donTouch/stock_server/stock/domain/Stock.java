@@ -39,24 +39,20 @@ public class Stock {
                 + dividendScore * (double) userDividendScore * 3;
 
         double krwClosePrice = closePrice;
-        double krwDividendMonth = dividendMonth;
         if (!exchange.equals("KSC")) {
             krwClosePrice *= ExchangeRate.USD.getBuying();
-            krwDividendMonth *= ExchangeRate.USD.getSelling();
         }
 
 
-        return new StockDTO(id, symbol, name, type, exchange, (int) krwClosePrice, (int) krwDividendMonth, dividendYieldTtm, personalizedScore);
+        return new StockDTO(id, symbol, name, type, exchange, (int) krwClosePrice, dividendMonth, dividendYieldTtm, personalizedScore);
     }
 
     public StockDTO convertToDTO() {
         double krwClosePrice = closePrice;
-        double krwDividendMonth = dividendMonth;
         if (!exchange.equals("KSC")) {
             krwClosePrice *= ExchangeRate.USD.getBuying();
-            krwDividendMonth *= ExchangeRate.USD.getSelling();
         }
 
-        return new StockDTO(id, symbol, name, type, exchange, (int) krwClosePrice, (int) krwDividendMonth, dividendYieldTtm, null);
+        return new StockDTO(id, symbol, name, type, exchange, (int) krwClosePrice, dividendMonth, dividendYieldTtm, null);
     }
 }

@@ -1,8 +1,6 @@
 package donTouch.energy_server.utils;
 
 import donTouch.utils.utils.ApiUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -11,20 +9,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.List;
 
 @Component
-@PropertySource(value = {"application.properties"})
 public class Web {
-    private static String userUrl;
-
-    @Value("${USER_URL}")
-    public void setUserUrl(String userUrl) {
-        Web.userUrl = userUrl;
-    }
-
     public static List<String> getLikeEnergyFundIds(Long userId) {
         try {
             WebClient webClient = WebClient.create();
 
-            String getLikeEnergyFundIdsUrl = userUrl + "/api/user/like/energy?userId=" + userId;
+            String getLikeEnergyFundIdsUrl = "http://15.165.74.129:8081" + "/api/user/like/energy?userId=" + userId;
             ResponseEntity<ApiUtils.ApiResult<List<String>>> responseEntity = webClient.get()
                     .uri(getLikeEnergyFundIdsUrl)
                     .retrieve()

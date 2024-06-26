@@ -1,8 +1,6 @@
 package donTouch.estate_server.utils;
 
 import donTouch.utils.utils.ApiUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -11,21 +9,14 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.List;
 
 @Component
-@PropertySource(value = {"application.properties"})
 public class Web {
-    private static String userUrl;
     private static WebClient webClient;
-
-    @Value("${USER_URL}")
-    public void setUserUrl(String userUrl) {
-        Web.userUrl = userUrl;
-    }
 
     public static List<Integer> getLikeEstateFundIds(Long userId) {
         try {
             WebClient webClient = getWebClient();
 
-            String getLikeEstateFundIdsUrl = userUrl + "/api/user/like/estate?userId=" + userId;
+            String getLikeEstateFundIdsUrl = "http://15.165.74.129:8081" + "/api/user/like/estate?userId=" + userId;
             ResponseEntity<ApiUtils.ApiResult<List<Integer>>> responseEntity = webClient.get()
                     .uri(getLikeEstateFundIdsUrl)
                     .retrieve()
