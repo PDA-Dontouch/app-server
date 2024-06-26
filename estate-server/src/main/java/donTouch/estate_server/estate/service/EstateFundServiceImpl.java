@@ -15,7 +15,6 @@ import donTouch.estate_server.kafka.service.KafkaProducerService;
 import donTouch.utils.utils.ApiUtils.ApiResult;
 import donTouch.utils.utils.Sort;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -36,11 +35,6 @@ public class EstateFundServiceImpl implements EstateFundService {
     private final EstateFundMapper estateFundMapper = EstateFundMapper.INSTANCE;
     private final RestTemplate restTemplate = new RestTemplate();
     private final KafkaProducerService kafkaProducerService;
-
-    @Value("${USER_URL}")
-    private static String USER_URL;
-    @Value("${HOLDING_URL}")
-    private static String HOLDING_URL;
 
     @Override
     public List<EstateFundDto> getAllEstateFund() {
@@ -77,7 +71,7 @@ public class EstateFundServiceImpl implements EstateFundService {
         }
 
         BankCalculateForm requestBody = new BankCalculateForm(buyEstateFundForm.getUserId(), (long) inputCash * -1);
-        ApiResult result = restTemplate.postForEntity(USER_URL + "/api/user/bank/cal", requestBody, ApiResult.class).getBody();
+        ApiResult result = restTemplate.postForEntity("http://15.165.74.129:8081" + "/api/user/bank/cal", requestBody, ApiResult.class).getBody();
         System.out.println("result ======================== :" + result.getResponse());
         if (result.getResponse().equals("잔고가 부족합니다.")) {
             throw new NullPointerException("잔고가 부족합니다.");
@@ -125,7 +119,7 @@ public class EstateFundServiceImpl implements EstateFundService {
         HttpEntity<HoldingEstateFundForm> requestEntity = new HttpEntity<>(requestBody, headers);
 
         ResponseEntity<HoldingEstateFundDto> responseEntity = restTemplate.postForEntity(
-                HOLDING_URL + "/api/holding/estate/sell",
+                "http://13.125.214.60:8085" + "/api/holding/estate/sell",
                 requestEntity,
                 HoldingEstateFundDto.class
         );
@@ -134,7 +128,7 @@ public class EstateFundServiceImpl implements EstateFundService {
             HoldingEstateFundDto responseBody = responseEntity.getBody();
 
             BankCalculateForm requestBodyBank = new BankCalculateForm(responseBody.getUserId(), (long) responseBody.getInputCash());
-            ApiResult result = restTemplate.postForEntity(USER_URL + "/api/user/bank/cal", requestBodyBank, ApiResult.class).getBody();
+            ApiResult result = restTemplate.postForEntity("http://15.165.74.129:8081" + "/api/user/bank/cal", requestBodyBank, ApiResult.class).getBody();
             if (result.getResponse().equals("잔고가 부족합니다.")) {
                 throw new NullPointerException("입금이 되지 않았습니다.");
             }
